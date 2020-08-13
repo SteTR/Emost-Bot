@@ -1,0 +1,21 @@
+{
+  "name": "emost-bot",
+  "version": "1.0.0",
+  "description": "Voice Recognition Discord Bot for commanding the bot to play Music",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/SteTR/Emost-Bot"
+  },
+  "keywords": [
+    "discord",
+    "voice-recognition",
+    "discordjs",
+    "porcupine"
+  ],
+  "author": "Steven Tran",
+  "license": "ISC"
+}
