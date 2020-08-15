@@ -12,11 +12,15 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-client.serverConnections = new Discord.Collection(); // TODO this could be a refactor
+client.voiceConnections = new Discord.Collection(); // TODO this could be a refactor
 
 // Re-add any servers that bot is still connected.
 // TODO
 
+function createVoiceConnectionData(connection, dispatcher = undefined, userStreams = [])
+{
+    return {connection: connection, dispatcher: dispatcher, userStreams: userStreams};
+}
 
 function createBot()
 {
@@ -41,7 +45,6 @@ client.once('ready', () =>
 {
     console.log('bot is online');
 });
-
 client.on('message', message =>
 {
     if (!message.content.startsWith(config.prefix) || message.author.bot) return;
@@ -59,28 +62,32 @@ client.on('message', message =>
             {
                 const connection = await message.member.voice.channel.join()
                                                 .then(message.channel.send(`Connected to ${message.member.voice.channel}.`));
-                message.client.serverConnections.set(message.guild.id, {connection: connection, dispatched: undefined, users: []});
-                const currentServerConnection = message.client.serverConnections.get(message.guild.id);
 
                 // Play something to send a opcode 5 payload (apparently a requirement that was not documented)
                 // https://github.com/discord/discord-api-docs/issues/808
-                const dispatcher =
-                    currentServerConnection.dispatched = currentServerConnection.connection
-                                                                                .play(ytdl("https://www.youtube.com/watch?v=oFwFw2YvUKY",
-                                                                                         {filter: "audioonly", range: {start: 0, end: 5000}}));
+                const dispatcher = connection.play(ytdl("https://www.youtube.com/watch?v=oFwFw2YvUKY",
+                                             {filter: "audioonly", range: {start: 0, end: 5000}}));
                 dispatcher.on("start", () => {
-                    console.log("Scribe: Play Starting...");
+                    console.log("Starting initial audio for payload request");
                 });
                 dispatcher.on("finish", () => {
-                    console.log("Scribe: Finished playing!");
+                    console.log("Finished the initial audio");
                 });
                 dispatcher.on("end", (end) => {
-                    console.log("Scribe: End Finished playing!");
+                    console.log("Ended the initial audio");
                 });
-
-                connection.on('speaking', (user, speaking) => {
-                    console.log("dank memes")
-                });
+                const userStreams = [];
+                message.guild.me.voice.channel.members.forEach(member =>
+                                                               {
+                                                                  if (member.user.id !== client.user.id)
+                                                                  {
+                                                                      console.log(`created audio stream for ${member.user}`);
+                                                                      const audio = connection.receiver.createStream(member.user, {mode: 'pcm', end: 'manual'});
+                                                                      audio.pipe(fs.createWriteStream(`${member.user.id}.wav`));
+                                                                      userStreams.push(audio);
+                                                                  }
+                                                               });
+                message.client.voiceConnections.set(message.guild.id, createVoiceConnectionData(connection, dispatcher, userStreams));
             }
             else
             {
