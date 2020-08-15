@@ -5,8 +5,9 @@
 const env = require('dotenv').config({path: '../.env'});
 const config = require('../config/config.json');
 const Discord = require('discord.js');
-const fs = require('fs');
+const fs = require('fs'); // TODO remove
 const ytdl = require('ytdl-core');
+const voiceRecognition = require('./bbb.js');
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -91,6 +92,7 @@ client.on('message', message =>
                                                                   {
                                                                       console.log(`created audio stream for ${member.user}`);
                                                                       const audio = connection.receiver.createStream(member.user, {mode: 'pcm', end: 'manual'});
+                                                                      const VR = new voiceRecognition.VoiceRecorder(audio, config.sample_rate_hz);
                                                                       audio.pipe(fs.createWriteStream(`${member.user.id}.wav`));
                                                                       userStreams.push(audio);
                                                                   }

@@ -1,4 +1,5 @@
 {
   "prefix": "!",
-  "initial_audio_src": "https://www.youtube.com/watch?v=oFwFw2YvUKY"
+  "initial_audio_src": "https://www.youtube.com/watch?v=oFwFw2YvUKY",
+  "sample_rate_hz": 48000
 }
