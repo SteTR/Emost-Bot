@@ -17,5 +17,11 @@
     "porcupine"
   ],
   "author": "Steven Tran",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "ytdl-core": "^3.2.1"
+  }
 }
