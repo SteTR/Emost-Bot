@@ -27,6 +27,25 @@ function createBot()
     const client = new Discord.Client();
     client.commands = new Discord.Collection();
 }
+
+function fixVoiceReceive(connection)
+{
+    // Play something to send a opcode 5 payload (apparently a requirement that was not documented)
+    // https://github.com/discord/discord-api-docs/issues/808
+    const dispatcher = connection.play(ytdl(config.initial_audio_src,
+                                            {filter: "audioonly", range: {start: 0, end: 5000}}));
+    dispatcher.on("start", () => {
+        console.log("Starting initial audio for payload request");
+    });
+    dispatcher.on("finish", () => {
+        console.log("Finished the initial audio");
+    });
+    dispatcher.on("end", (end) => {
+        console.log("Ended the initial audio");
+    });
+    return dispatcher;
+}
+
 // add commands
 for (const file of commandFiles) {
     const commandList = require(`./commands/${file}`);
@@ -63,19 +82,8 @@ client.on('message', message =>
                 const connection = await message.member.voice.channel.join()
                                                 .then(message.channel.send(`Connected to ${message.member.voice.channel}.`));
 
-                // Play something to send a opcode 5 payload (apparently a requirement that was not documented)
-                // https://github.com/discord/discord-api-docs/issues/808
-                const dispatcher = connection.play(ytdl("https://www.youtube.com/watch?v=oFwFw2YvUKY",
-                                             {filter: "audioonly", range: {start: 0, end: 5000}}));
-                dispatcher.on("start", () => {
-                    console.log("Starting initial audio for payload request");
-                });
-                dispatcher.on("finish", () => {
-                    console.log("Finished the initial audio");
-                });
-                dispatcher.on("end", (end) => {
-                    console.log("Ended the initial audio");
-                });
+                const dispatcher = fixVoiceReceive(connection);
+
                 const userStreams = [];
                 message.guild.me.voice.channel.members.forEach(member =>
                                                                {
