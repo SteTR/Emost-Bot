@@ -25,6 +25,8 @@
     "discord.js": "^12.3.0",
     "dotenv": "^8.2.0",
     "nan": "^2.14.1",
+    "pv-porcupine": "git+https://github.com/benbucksch/pv-porcupine.git",
+    "sox-stream": "^2.0.6",
     "ytdl-core": "^3.2.1"
   }
 }
