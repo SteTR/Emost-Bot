@@ -6,7 +6,6 @@ const env = require('dotenv').config({path: '../.env'});
 const config = require('../config/config.json');
 const Discord = require('discord.js');
 const fs = require('fs'); // TODO remove
-const Bumblebee = require('bumblebee-hotword-node');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 const client = new Discord.Client();

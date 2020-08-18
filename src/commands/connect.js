@@ -1,8 +1,8 @@
 const {createCommand, fixVoiceReceive, createVoiceConnectionData} = require('../util.js');
-const sox = require('sox-stream');
 const fs = require('fs');
 // const {src, dst} = require('../../config/audio_format.json');
 const Bumblebee = require('bumblebee-hotword-node');
+const ffmpeg = require('fluent-ffmpeg');
 
 module.exports = createCommand("connect",
     "connect to server and set up streams.",
@@ -20,34 +20,22 @@ module.exports = createCommand("connect",
             {
                 if (member.user.id !== message.client.user.id)
                 {
-                    // Stream that converts s16le 48000 hz 2 channel to s16le 16000hz 1 channel
-                    const transcode = sox({
-                        output: {
-                            bits: 16,
-                            rate: 16000,
-                            channels: 1,
-                            type: 'raw'},
-                        input: {
-                            bits: 16,
-                            rate: 48000,
-                            channels: 2,
-                            type: 'raw',
-                            encoding: 'signed-integer'}});
-
                     const audioStream = connection.receiver.createStream(member.user,
                         {mode: 'pcm', end: 'manual'});
-                    // audioStream.on('data', data => console.log(data));
-                    audioStream.pipe(transcode, {end: false});
 
-                    transcode.pipe(fs.createWriteStream('functioning_stupid_fux.raw'));
+                    const command = new ffmpeg(audioStream).inputFormat('s16le').audioChannels(1).audioFrequency(16000);
 
+                    command.on('error', err => console.log(err));
+                    command.on('end', (stdout, stderr) => console.log('we finished :0'));
+
+                    // Voice Recognition Package
                     // const bumblebee = new Bumblebee();
                     // bumblebee.addHotword('bumblebee');
                     // bumblebee.on('hotword', function (hotword) {
                     //     console.log('Hotword Detected:', hotword);
                     // });
                     // bumblebee.start({stream: transcode});
-                    //
+
                     userStreams.push(audioStream);
                     console.log(`created audio stream for ${member.user}`);
                 }
