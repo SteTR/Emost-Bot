@@ -3,29 +3,33 @@
   "version": "1.0.0",
   "description": "Voice Recognition Discord Bot for commanding the bot to play Music",
   "main": "bot.js",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "github.com/SteTR/Emost-Bot"
+    "url": "git+https://github.com/SteTR/Emost-Bot.git"
   },
   "keywords": [
-    "discord",
-    "voice-recognition",
-    "discordjs",
-    "porcupine"
+    "discord"
   ],
   "author": "Steven Tran",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SteTR/Emost-Bot/issues"
+  },
+  "homepage": "https://github.com/SteTR/Emost-Bot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
+    "@google-cloud/speech": "^4.1.1",
     "bindings": "^1.5.0",
-    "bumblebee-hotword-node": "^0.1.0",
-    "discord.js": "^12.3.0",
+    "bumblebee-hotword-node": "^0.1.1",
+    "discord.js": "12.3.0",
     "dotenv": "^8.2.0",
     "nan": "^2.14.1",
-    "pv-porcupine": "git+https://github.com/benbucksch/pv-porcupine.git",
     "sox-stream": "^2.0.6",
     "ytdl-core": "^3.2.1"
   }

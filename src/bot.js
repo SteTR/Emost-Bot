@@ -37,10 +37,9 @@ client.on('message', message =>
     const args = message.content.slice(config.prefix.length).trim().split(' ');
     const command = client.commands.get(args.shift().toLowerCase());
     if (command !== undefined) command.execute(message, args);
-
-
 });
 
+console.log('starting bot')
 // Start the bot
 client.login(env.parsed.DISCORD_TOKEN);
 
