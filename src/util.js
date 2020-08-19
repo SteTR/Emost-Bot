@@ -1,5 +1,4 @@
 // Currently jsut a dump of everything that doesn't belong to other files, TODO need to move to appropriate sections or files.
-const sox = require('sox-stream');
 const ytdl = require('ytdl-core');
 const {initial_audio_src} = require('../config/config.json');
 

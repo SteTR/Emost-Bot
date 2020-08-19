@@ -3,7 +3,6 @@ const fs = require('fs');
 // const {src, dst} = require('../../config/audio_format.json');
 const Bumblebee = require('bumblebee-hotword-node');
 const ffmpeg = require('fluent-ffmpeg');
-// const processSpawn = require('child_process')
 
 module.exports = createCommand("connect",
     "connect to server and set up streams.",
@@ -19,15 +18,16 @@ module.exports = createCommand("connect",
 
             const audioStream = connection.receiver.createStream(member.user, {mode: 'pcm', end: 'manual'});
 
+
+
             // Make voice streams for voice commands
             const command = new ffmpeg().input(audioStream)
                 .inputOptions(['-f s16le', '-ac 2', '-ar 48000'])
-                .outputOptions(['-ac 1', '-ar 16000']).pipe();
+                .outputOptions(['-ac 1', '-ar 16000']).format('s16le').pipe({end: false});
 
-            // command.on('error', err => console.log(err));
-            // command.on('end', (stdout, stderr) => console.log('we finished :0'));
 
             // Voice Recognition Package
+            // TODO initialize bumblebee outside
             const bumblebee = new Bumblebee();
             bumblebee.addHotword('bumblebee');
             bumblebee.on('hotword', hotword => console.log('hot word detected: ' + hotword));
@@ -35,7 +35,7 @@ module.exports = createCommand("connect",
 
             console.log(`created audio stream for ${member.user}`);
 
-            userStreams.push(audioStream);
+            userStreams.push(command);
 
             // Store the connection to the server, the dispatcher to the server, and voice streams of each user in the voice channel.
             message.client.voiceConnections.set(message.guild.id, createVoiceConnectionData(connection, dispatcher, userStreams));

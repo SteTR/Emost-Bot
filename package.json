@@ -31,8 +31,6 @@
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "nan": "^2.14.1",
-    "sox-stream": "^2.0.6",
-    "stream-transcoder": "0.0.5",
     "ytdl-core": "^3.2.1"
   }
 }
