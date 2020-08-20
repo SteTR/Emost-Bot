@@ -26,6 +26,7 @@
     "@discordjs/opus": "^0.3.2",
     "@google-cloud/speech": "^4.1.1",
     "bindings": "^1.5.0",
+    "bumblebee-deepspeech": "^0.1.1",
     "bumblebee-hotword-node": "^0.1.1",
     "discord.js": "12.3.0",
     "dotenv": "^8.2.0",

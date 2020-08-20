@@ -1,6 +1,9 @@
 const {createCommand, fixVoiceReceive, createVoiceConnectionData} = require('../util.js');
 const fs = require('fs');
 // const {src, dst} = require('../../config/audio_format.json');
+const ytdl = require('ytdl-core');
+const BumbleBeeDeepSpeech = require('bumblebee-deepspeech');
+
 const Bumblebee = require('bumblebee-hotword-node');
 const ffmpeg = require('fluent-ffmpeg');
 
@@ -25,12 +28,37 @@ module.exports = createCommand("connect",
                 .inputOptions(['-f s16le', '-ac 2', '-ar 48000'])
                 .outputOptions(['-ac 1', '-ar 16000']).format('s16le').pipe({end: false});
 
-
+            let detectVoice = true;
+            let listenTo = false;
             // Voice Recognition Package
             // TODO initialize bumblebee outside
             const bumblebee = new Bumblebee();
             bumblebee.addHotword('bumblebee');
-            bumblebee.on('hotword', hotword => console.log('hot word detected: ' + hotword));
+            bumblebee.on('hotword', hotword =>
+            {
+                // if (detectVoice)
+                // {
+                    const pingDispatch = connection.play(ytdl('https://www.youtube.com/watch?v=kMlLz7stjwc', {filter: "audioonly"}));
+                    pingDispatch.on("finish", () =>
+                    {
+                        listenTo = true;
+                        pingDispatch.destroy();
+                    });
+                    detectVoice = false;
+                // }
+            });
+            // BumbleBeeDeepSpeech.start({modelName: 'english', modelPath: './models/deepspeech-0.8.0-models', silenceThreshold: 200, vadMode: 'VERY_AGGRESSIVE', debug: true})
+            //     .then(deepspeech => {
+            //         deepspeech.on('recognize', (text, stats) => {
+            //           console.log('\nrecognize:', text, stats);
+            //         });
+            //
+            //         bumblebee.on('data', (intData, sampleRate, hotword, float32arr) =>
+            //         {
+            //             deepspeech.streamData(intData, sampleRate, hotword, float32arr);
+            //         });
+            //     });
+            // bumblebee.on('data', data => console.log(data));
             bumblebee.start({stream: command});
 
             console.log(`created audio stream for ${member.user}`);

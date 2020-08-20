@@ -18,9 +18,10 @@ function fixVoiceReceive(connection)
     });
     dispatcher.on("finish", () => {
         console.log("Finished the initial audio");
+        dispatcher.destroy();
     });
     dispatcher.on("end", (end) => {
-        console.log("Ended the initial audio");
+        console.log("Ended the dispatcher");
     });
     return dispatcher;
 }
