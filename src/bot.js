@@ -6,19 +6,26 @@ const env = require('dotenv').config({path: '../.env'});
 const config = require('../config/config.json');
 const Discord = require('discord.js');
 const fs = require('fs'); // TODO remove
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const textCommandFiles = fs.readdirSync('./commands/text_commands').filter(file => file.endsWith('.js'));
+const voiceCommandFiles = fs.readdirSync('./commands/voice_commands').filter(file => file.endsWith('.js'));
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.voiceConnections = new Discord.Collection(); // TODO this could be a refactor
+client.voiceCommands = new Discord.Collection();
 
 // Re-add any servers that bot is still connected.
 // TODO
 
 // add commands
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+for (const file of textCommandFiles) {
+    const command = require(`./commands/text_commands/${file}`);
     client.commands.set(command.name, command)
+}
+
+for (const file of voiceCommandFiles) {
+    const command = require(`./commands/voice_commands/${file}`);
+    client.voiceCommands.set(command.name, command)
 }
 
 // Check if token was obtained correctly.

@@ -1,4 +1,4 @@
-const {createCommand} = require('../util.js');
+const {createCommand} = require('../../util.js');
 
 module.exports = createCommand('disconnect',
     'disconnect from author\'s voice channel',

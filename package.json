@@ -32,6 +32,7 @@
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "nan": "^2.14.1",
+    "yt-search": "^2.2.0",
     "ytdl-core": "^3.2.1"
   }
 }
