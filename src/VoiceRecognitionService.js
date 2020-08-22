@@ -1,5 +1,10 @@
 const speech = require('@google-cloud/speech');
 
+// TODO part of tempFix
+const {createConverter} = require("./converter");
+const Bumblebee = require("bumblebee-hotword-node");
+
+// TODO maybe include the hotword detection in this?
 class VoiceRecognitionService
 {
     constructor(connection)
@@ -42,7 +47,33 @@ class VoiceRecognitionService
         setTimeout(() =>
         {
             this.restart(stream);
+            this.tempFix(client);
         }, duration);
+    }
+
+    tempFix(client)
+    {
+        /* TODO:
+         * Issue:
+         * Bumblebee would stop listening to the audio stream with .on('data')
+         *
+         * Temp Solution:
+         * Remake bumblebee and the converter
+         *
+         */
+        const guild = this._connection.channel.guild;
+        const serverInfo = client.voiceConnections.get(guild.id)
+        const voiceRecorderStream = createConverter(
+            this._connection.receiver.createStream(serverInfo.followingUser,
+                {mode: 'pcm', end: 'manual'}));
+        const bumblebee = new Bumblebee().on('hotword', (hotword) =>
+        {
+            if (this.available) this.listen(client, voiceRecorderStream, 5000)
+        });
+        bumblebee.addHotword('bumblebee');
+        serverInfo.voiceRecorderStream = voiceRecorderStream;
+        serverInfo.bumblebee = bumblebee;
+        bumblebee.start({stream: voiceRecorderStream});
     }
 
     restart(stream)
@@ -58,6 +89,7 @@ class VoiceRecognitionService
                 this.executeCommand(this._transcribed);
                 this.available = true;
             });
+
     }
 
     /**
