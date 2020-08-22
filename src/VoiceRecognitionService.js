@@ -7,28 +7,68 @@ const Bumblebee = require("bumblebee-hotword-node");
 // TODO maybe include the hotword detection in this?
 class VoiceRecognitionService
 {
-    constructor(connection)
+    constructor(connection, voiceReceiverStream)
     {
-        this.available = true;
+        // boolean to check if it's currently recording to google speech api
+        this.recording = false;
         this._connection = connection;
         this._inputFormat = {config:
-                {
-                    encoding: 'LINEAR16',
-                    sampleRateHertz: 16000,
-                    languageCode: 'en-US'
-                }};
+        {
+            encoding: 'LINEAR16',
+            sampleRateHertz: 16000,
+            languageCode: 'en-US'
+        }};
         this._transcribed = '';
         this._client = new speech.SpeechClient();
+        this.startStream(voiceReceiverStream);
+    }
+
+    startStream(voiceReceiverStream)
+    {
         this._currentStream = this._client.streamingRecognize(this._inputFormat)
-            .on('error', console.error)
+            .on('error', error =>
+                {
+                    console.log('google error');
+                    console.log(error);
+                    return console.error;
+                })
             .on('data', data =>
             {
                 this._transcribed = data.results[0].alternatives[0].transcript;
                 console.log('google transcribed: ' + this._transcribed);
                 this.executeCommand(this._transcribed);
-                this.available = true;
             });
 
+        // Setting up bumblebee for hotword detection
+        this._bumblebee = new Bumblebee()
+            .on('hotword', (hotword) =>
+            {
+                console.log('hotword detected');
+                if (!this.recording)
+                {
+                    this.recording = true;
+                    setTimeout(() =>
+                    {
+                        console.log('google recording should be off');
+                        this.recording = false;
+                        this.startedCount = false;
+                        this.restartStream();
+                    }, 5000);
+                }
+
+            })
+            .on('data', data =>
+            {
+                if (this.recording)
+                {
+                    console.log('recording')
+                    this._currentStream.write(data);
+                }
+                else console.log('not recording');
+
+            });
+        this._bumblebee.addHotword('bumblebee');
+        this._bumblebee.start({stream: voiceReceiverStream});
 
     }
 
@@ -46,40 +86,14 @@ class VoiceRecognitionService
         stream.pipe(this._currentStream);
         setTimeout(() =>
         {
-            this.restart(stream);
-            this.tempFix(client);
+            this.restartStream(stream);
         }, duration);
     }
 
-    tempFix(client)
-    {
-        /* TODO:
-         * Issue:
-         * Bumblebee would stop listening to the audio stream with .on('data')
-         *
-         * Temp Solution:
-         * Remake bumblebee and the converter
-         *
-         */
-        const guild = this._connection.channel.guild;
-        const serverInfo = client.voiceConnections.get(guild.id)
-        const voiceRecorderStream = createConverter(
-            this._connection.receiver.createStream(serverInfo.followingUser,
-                {mode: 'pcm', end: 'manual'}));
-        const bumblebee = new Bumblebee().on('hotword', (hotword) =>
-        {
-            if (this.available) this.listen(client, voiceRecorderStream, 5000)
-        });
-        bumblebee.addHotword('bumblebee');
-        serverInfo.voiceRecorderStream = voiceRecorderStream;
-        serverInfo.bumblebee = bumblebee;
-        bumblebee.start({stream: voiceRecorderStream});
-    }
 
-    restart(stream)
+    restartStream()
     {
         console.log('restarting')
-        stream.unpipe(this._currentStream);
         this._currentStream.end();
         this._currentStream = this._client.streamingRecognize(this._inputFormat)
             .on('error', console.error)
@@ -87,32 +101,29 @@ class VoiceRecognitionService
                 this._transcribed = data.results[0].alternatives[0].transcript;
                 console.log('google transcribed: ' + this._transcribed);
                 this.executeCommand(this._transcribed);
-                this.available = true;
             });
-
     }
 
     /**
      * Executes command given the transcribed text
      *
-     * @param client discordjs client
      * @param transcribed
      * @returns {Promise<void>}
      */
     async executeCommand(transcribed)
     {
+        console.log(transcribed)
         const client = this._connection.client;
         let arrayed_transcribed = transcribed.split(" ");
         const stringCommand = arrayed_transcribed.shift().toLowerCase();
         const command = client.voiceCommands.get(stringCommand);
         if (command === undefined)
         {
-            console.log(`command ${stringCommand} not available`);
+            console.log(`${stringCommand} command not available`);
             return;
         }
         command.execute(client, this._connection.channel.guild, arrayed_transcribed);
     }
 }
-
 
 module.exports = {VoiceRecognitionService};

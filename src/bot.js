@@ -36,6 +36,13 @@ client.once('ready', () =>
     console.log('bot is online');
 });
 
+client.on('error', (error) => {
+    console.log('discord error');
+    console.log(error.code);
+    console.log('okay dokay')
+
+})
+
 client.on('message', message =>
 {
     if (!message.content.startsWith(config.prefix) || message.author.bot) return;
@@ -48,8 +55,3 @@ client.on('message', message =>
 console.log('starting bot')
 // Start the bot
 client.login(env.parsed.DISCORD_TOKEN);
-
-function listenTo(user)
-{
-
-}

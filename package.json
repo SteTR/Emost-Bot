@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node bot.js"
   },
   "repository": {
     "type": "git",
@@ -26,13 +27,13 @@
     "@discordjs/opus": "^0.3.2",
     "@google-cloud/speech": "^4.1.1",
     "bindings": "^1.5.0",
-    "bumblebee-deepspeech": "^0.1.1",
     "bumblebee-hotword-node": "^0.1.1",
     "discord.js": "12.3.0",
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "nan": "^2.14.1",
     "yt-search": "^2.2.0",
-    "ytdl-core": "^3.2.1"
+    "ytdl-core": "^3.2.1",
+    "ytdl-core-discord": "^1.2.1"
   }
 }

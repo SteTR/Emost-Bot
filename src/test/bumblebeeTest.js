@@ -1,25 +1,21 @@
 const Bumblebee = require('bumblebee-hotword-node');
-const BumbleBeeDeepSpeech = require('bumblebee-deepspeech');
+const fs = require('fs');
 
-const bumblebee = new Bumblebee();
-bumblebee.addHotword('bumblebee');
-BumbleBeeDeepSpeech.start(
-    {modelPath: './models/deepspeech-0.8.1-models',
-        silenceThreshold: 500,
-        vadMode: 'NORMAL',
-        debug: false})
-    .then(deepspeech =>
+fs.createReadStream()
+
+function createNewBee()
+{
+    const bee = new Bumblebee();
+    bee.addHotword('bumblebee');
+    bee.on('hotword', (hotword =>
     {
-        console.log('deepsearch finished loading')
-        deepspeech.on('recognize', (text, stats) => console.log('translated text: ' + text));
-
-        bumblebee.on('data', (intData, sampleRate, hotword, float32arr) =>
-        {
-            console.log(intData);
-            deepspeech.streamData(intData, sampleRate, hotword, float32arr)
-        });
-
-        bumblebee.start();
-
-        console.log('\n Started speech recognition');
-    });
+        console.log('hotword detected')
+        bee.stop();
+    }));
+    return bee;
+}
+for (var i = 0; i < 100; i++)
+{
+    createNewBee().start();
+}
+console.log('\n Started speech recognition');

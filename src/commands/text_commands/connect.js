@@ -1,5 +1,4 @@
 const {createCommand, fixVoiceReceive, createVoiceConnectionData} = require('../../util.js');
-// const {src, dst} = require('../../config/audio_format.json');
 const Bumblebee = require('bumblebee-hotword-node');
 const {createConverter} = require('../../converter');
 
@@ -16,41 +15,22 @@ module.exports = createCommand("connect",
             // play static noise to get voice functioning
             fixVoiceReceive(connection);
 
+            const voiceReceiver = connection.receiver.createStream(member.user,
+                {mode: 'pcm', end: 'manual'});
+
             // Make voice streams for voice commands
-            const voiceRecorderStream = createConverter(
-                connection.receiver.createStream(member.user,
-                                          {mode: 'pcm', end: 'manual'}))
-
-            const vr = new VoiceRecognitionService(connection);
-            // Voice Recognition Package
-            // TODO initialize bumblebee outside
-            const bumblebee = new Bumblebee().on('hotword', (hotword) => {
-                    if (vr.available) vr.listen(message.client, voiceRecorderStream, 5000);
-                });
-
-            bumblebee.addHotword('bumblebee');
-            bumblebee.start({stream: voiceRecorderStream});
+            const voiceRecorderStream = createConverter(voiceReceiver)
+            const vr = new VoiceRecognitionService(connection, voiceRecorderStream);
 
             // Store the connection to the server, the dispatcher to the server, and voice streams of current user.
             message.client.voiceConnections.set(message.guild.id,
                 createVoiceConnectionData(connection,
                     undefined,
-                    voiceRecorderStream));
-            /* TODO:
-             * Issue:
-             * Bumblebee would stop listening to the audio stream with .on('data')
-             *
-             * Temp Solution:
-             * Remake bumblebee and the converter
-             *
-             */
-            member.client.voiceConnections.get(message.guild.id).followingUser = member.user;
-            member.client.voiceConnections.get(message.guild.id).bumblebee = bumblebee;
+                    voiceRecorderStream,
+                    vr));
 
             console.log(`created audio stream for ${member.user}`);
         } else {
             await message.channel.send(`<@${message.author.id}> is not connected to a voice channel.`)
         }
     });
-
-
