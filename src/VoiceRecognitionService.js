@@ -69,7 +69,6 @@ class VoiceRecognitionService
             });
         this._bumblebee.addHotword('bumblebee');
         this._bumblebee.start({stream: voiceReceiverStream});
-
     }
 
     /**
@@ -123,6 +122,11 @@ class VoiceRecognitionService
             return;
         }
         command.execute(client, this._connection.channel.guild, arrayed_transcribed);
+    }
+
+    shutdown()
+    {
+
     }
 }
 
