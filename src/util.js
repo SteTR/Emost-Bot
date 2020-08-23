@@ -26,9 +26,15 @@ function fixVoiceReceive(connection)
     return dispatcher;
 }
 
-function createVoiceConnectionData(connection, dispatcher = undefined, voiceRecorderStream = undefined, VoiceRecognition)
+function createVoiceConnectionData(connection, dispatcher = undefined,
+                                   voiceRecorderStream = undefined, VoiceRecognition, member)
 {
-    return {connection: connection, dispatcher: dispatcher, voiceRecorderStream: voiceRecorderStream, VoiceRecognition: VoiceRecognition};
+    return {
+        connection: connection,
+        dispatcher: dispatcher,
+        voiceRecorderStream: voiceRecorderStream,
+        VoiceRecognition: VoiceRecognition,
+        listeningTo: member};
 }
 
 module.exports = {createCommand, fixVoiceReceive, createVoiceConnectionData};
