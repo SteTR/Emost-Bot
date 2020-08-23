@@ -12,7 +12,7 @@ module.exports = createCommand(
         const song = args.join(" ");
         console.log(`playing ${song}`);
         const videos = await get_yt_url(song);
-        serverInfo.client.send()
+        serverInfo.textChannel.send(`Playing the song: ${videos.videos[0].title}`);
         serverInfo.dispatcher = serverInfo.connection.play(await ytdl(videos.videos[0].url, {highWaterMark: 1 << 25}),
 {
             type: 'opus'

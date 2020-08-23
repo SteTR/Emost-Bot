@@ -5,24 +5,23 @@
 const env = require('dotenv').config({path: '../.env'});
 const config = require('../config/config.json');
 const Discord = require('discord.js');
-const fs = require('fs'); // TODO remove
+const fs = require('fs');
+
 const textCommandFiles = fs.readdirSync('./commands/text_commands').filter(file => file.endsWith('.js'));
 const voiceCommandFiles = fs.readdirSync('./commands/voice_commands').filter(file => file.endsWith('.js'));
 
 const client = new Discord.Client();
-client.commands = new Discord.Collection();
-client.voiceConnections = new Discord.Collection(); // TODO this could be a refactor
+client.textCommands = new Discord.Collection();
+client.voiceConnections = new Discord.Collection();
 client.voiceCommands = new Discord.Collection();
 
-// Re-add any servers that bot is still connected.
-// TODO
-
-// add commands
+// add text commands
 for (const file of textCommandFiles) {
     const command = require(`./commands/text_commands/${file}`);
-    client.commands.set(command.name, command)
+    client.textCommands.set(command.name, command)
 }
 
+// add voice commands
 for (const file of voiceCommandFiles) {
     const command = require(`./commands/voice_commands/${file}`);
     client.voiceCommands.set(command.name, command)
@@ -31,25 +30,27 @@ for (const file of voiceCommandFiles) {
 // Check if token was obtained correctly.
 if (env.error) throw env.error;
 
-client.once('ready', () =>
-{
-    console.log('bot is online');
-});
-
-client.on('error', (error) => {
-    console.log('discord error');
-    console.log(error.code);
-    console.log('okay dokay')
-
-})
+client.once('ready', () => console.log('bot is online'));
+client.on('error', (error) => console.error(error));
 
 client.on('message', message =>
 {
     if (!message.content.startsWith(config.prefix) || message.author.bot) return;
 
     const args = message.content.slice(config.prefix.length).trim().split(' ');
-    const command = client.commands.get(args.shift().toLowerCase());
+    const command = client.textCommands.get(args.shift().toLowerCase());
     if (command !== undefined) command.execute(message, args);
+});
+
+// TODO disconnect when listeningTo user changes voice channels or disconnects.
+client.on('voiceStateUpdate', (oldVoice, newVoice) =>
+{
+    console.log('someone left');
+    console.log(oldVoice.channel && newVoice.channel);
+    if (oldVoice.channel && newVoice.channel && oldVoice.channel.id !== newVoice.channel.id)
+    {
+        client.textCommands.get('disconnect').execute(oldVoice);
+    }
 });
 
 console.log('starting bot')
