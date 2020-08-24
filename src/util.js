@@ -29,13 +29,18 @@ function fixVoiceReceive(connection)
 function createVoiceConnectionData(connection,
                                    VoiceRecognition,
                                    user,
-                                   textChannel, dispatcher)
+                                   textChannel,
+                                   dispatcher)
 {
     return {
         connection: connection,
         textChannel: textChannel,
-        VoiceRecognition: VoiceRecognition,
-        listeningTo: user};
+        voiceRecognition: VoiceRecognition,
+        listeningTo: user,
+        dispatcher: undefined,
+        queue: [],
+        playing: undefined
+        };
 }
 
 module.exports = {createCommand, fixVoiceReceive, createVoiceConnectionData};

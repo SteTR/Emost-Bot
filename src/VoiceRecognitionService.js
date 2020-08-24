@@ -1,6 +1,7 @@
 const speech = require('@google-cloud/speech');
 const Bumblebee = require("bumblebee-hotword-node");
 const client = new speech.SpeechClient();
+const ytdl = require('ytdl-core-discord');
 
 // TODO maybe use single_utterance for shorter queries but will require two hotwords
 class VoiceRecognitionService
@@ -31,12 +32,28 @@ class VoiceRecognitionService
                 console.log('hotword detected');
                 if (!this.recording)
                 {
-                    this.recording = true;
-                    this._connection.play('ping.mp3');
                     await this.startStream();
+                    this.recording = true;
+                    // TODO maybe separate logic of connections into different?
+                    // Temp fix: if song is playing, pause it and then play it when we're done. Will save the timestamp
+                    // const songPlaying = this._connection.client.voiceConnections.get(this._connection.channel.guild.id).playing
+                    // if (songPlaying)
+                    // {
+                    //     console.log('paused song')
+                    //     // await songPlaying.stream.pause();
+                    //     songPlaying.timeStopped = this._connection.client.voiceConnections.get(this._connection.channel.guild.id).dispatcher.streamTime;
+                    // }
+                    this._connection.play('ping.mp3');
 
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         console.log('Disabled Google Stream from Listening');
+                        // Temp fix: continue song. Have to retrieve song again.
+                        // if (songPlaying)
+                        // {
+                        //     console.log('resuming song')
+                        //     songPlaying.stream = await ytdl(songPlaying.url, {begin: songPlaying.timeStopped});
+                        //     this._connection.play(songPlaying.stream, {type: "opus"});
+                        // }
                         this.recording = false;
                         this.shutdownStream();
                     }, 5000);
@@ -51,6 +68,7 @@ class VoiceRecognitionService
                 }
             });
 
+        // TODO add second hotword for short commands like 'skip' or 'pause', separate them.
         this._bumblebee.addHotword('bumblebee');
         this._bumblebee.start({stream: voiceReceiverStream});
     }
@@ -81,8 +99,10 @@ class VoiceRecognitionService
      */
     async executeCommand(transcribed)
     {
-        console.log(transcribed)
+
         const client = this._connection.client;
+        const stuff = client.voiceConnections.get(this._connection.channel.guild.id);
+        stuff.textChannel.send(`<@${stuff.listeningTo.id}> said: \"${(transcribed) ? transcribed : "..."}\"`);
         let arrayed_transcribed = transcribed.split(" ");
         const stringCommand = arrayed_transcribed.shift().toLowerCase();
         const command = client.voiceCommands.get(stringCommand);
@@ -92,6 +112,12 @@ class VoiceRecognitionService
             return;
         }
         command.execute(client, this._connection.channel.guild, arrayed_transcribed);
+    }
+
+    shutdown()
+    {
+        this._bumblebee.destroy();
+        this._connection.disconnect();
     }
 }
 

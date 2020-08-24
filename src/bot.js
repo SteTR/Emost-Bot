@@ -30,8 +30,13 @@ for (const file of voiceCommandFiles) {
 // Check if token was obtained correctly.
 if (env.error) throw env.error;
 
-client.once('ready', () => console.log('bot is online'));
+client.once('ready', () => {
+    // TODO when you disconnect and reconnect, how to readd servers?
+    console.log('bot is online');
+});
 client.on('error', (error) => console.error(error));
+
+// client.on('debug', console.log);
 
 client.on('message', message =>
 {
@@ -43,16 +48,7 @@ client.on('message', message =>
 });
 
 // TODO disconnect when listeningTo user changes voice channels or disconnects.
-client.on('voiceStateUpdate', (oldVoice, newVoice) =>
-{
-    console.log('someone left');
-    console.log(oldVoice.channel && newVoice.channel);
-    if (oldVoice.channel && newVoice.channel && oldVoice.channel.id !== newVoice.channel.id)
-    {
-        client.textCommands.get('disconnect').execute(oldVoice);
-    }
-});
 
-console.log('starting bot')
+console.log('Starting Bot')
 // Start the bot
 client.login(env.parsed.DISCORD_TOKEN);

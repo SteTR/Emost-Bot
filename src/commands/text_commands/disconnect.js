@@ -7,10 +7,13 @@ module.exports = createCommand('disconnect',
         const serverInfo = message.client.voiceConnections.get(message.guild.id);
 
         // leave the server
-        serverInfo.disconnect();
+        await serverInfo.connection.disconnect();
+
+        // destroy the voice recognition service
+        await serverInfo.voiceRecognition.shutdown();
 
         // Remove from storage
-        serverInfo.delete(message.guild.id);
+        message.client.voiceConnections.delete(message.guild.id);
 
         console.log(`deleted entry: ${message.guild.id} from voice connections list.`)
     });
