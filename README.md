@@ -1,5 +1,5 @@
 # Emost-Bot
-Emost-Bot is a music bot for discord using only voice commands. It will listen to only one person who types the !connect song. 
+Emost-Bot is a music bot for discord using only voice commands. It will listen to only one person who types the !connect command in a text channel. 
 
 # Text Commands(prefix: !)
 * connect
