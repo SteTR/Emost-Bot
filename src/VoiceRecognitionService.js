@@ -43,7 +43,7 @@ class VoiceRecognitionService
                     //     // await songPlaying.stream.pause();
                     //     songPlaying.timeStopped = this._connection.client.voiceConnections.get(this._connection.channel.guild.id).dispatcher.streamTime;
                     // }
-                    this._connection.play('ping.mp3');
+                    this._connection.play('ping.wav');
 
                     setTimeout(async () => {
                         console.log('Disabled Google Stream from Listening');
@@ -70,6 +70,12 @@ class VoiceRecognitionService
 
         // TODO add second hotword for short commands like 'skip' or 'pause', separate them.
         this._bumblebee.addHotword('bumblebee');
+
+        this._bumblebee.on('error', (error) =>
+        {
+            console.log(`"Bumblebee Error: ${error}`);
+            this.startBumblebee(voiceReceiverStream);
+        })
         this._bumblebee.start({stream: voiceReceiverStream});
     }
 
