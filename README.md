@@ -25,3 +25,5 @@ Emost-Bot is a music bot for discord using only voice commands. It will listen t
 
 # Hosting your own voice recognition bot
 The voice recognition bot requires google speech to text API key to function the speech to text and discord token for the bot.
+
+If you would like to use my bot, feel free to contact me on Discord (StevenT#4591) and we can discuss. 
