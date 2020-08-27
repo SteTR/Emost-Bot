@@ -1,4 +1,6 @@
 {
   "prefix": "!",
-  "initial_audio_src": "https://www.youtube.com/watch?v=oFwFw2YvUKY"
+  "initial_audio_src": "https://www.youtube.com/watch?v=oFwFw2YvUKY",
+  "hotword": "bumblebee",
+  "queueSize": 3
 }

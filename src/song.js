@@ -1,5 +1,5 @@
 // song object, storing song information
-
+// No usage at the moment.
 
 class Song
 {

@@ -5,9 +5,9 @@ module.exports = createCommand(
     'skips a song currently playing',
     (client, guild, args) =>
     {
-        console.log('skipping')
+        console.log(`Guild ${guild.id}: Skipping Song`);
         client.voiceCommands.get('pause').execute(client, guild, args);
         const serverInfo = client.voiceConnections.get(guild.id);
-        serverInfo.dispatcher = undefined;
+        serverInfo.dispatcher.emit('finish');
     }
 )

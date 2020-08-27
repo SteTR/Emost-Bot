@@ -12,8 +12,8 @@ const voiceCommandFiles = fs.readdirSync('./commands/voice_commands').filter(fil
 
 const client = new Discord.Client();
 client.textCommands = new Discord.Collection();
-client.voiceConnections = new Discord.Collection();
 client.voiceCommands = new Discord.Collection();
+client.voiceConnections = new Discord.Collection();
 
 // add text commands
 for (const file of textCommandFiles) {
@@ -32,12 +32,12 @@ if (env.error) throw env.error;
 
 client.once('ready', () => {
     // TODO when you disconnect and reconnect, how to readd servers?
-    console.log('bot is online');
+    console.log('Voice Recognition Bot is Online');
 });
+
 client.on('error', (error) => console.error(error));
 
-// client.on('debug', console.log);
-
+// Checks for text commands
 client.on('message', message =>
 {
     if (!message.content.startsWith(config.prefix) || message.author.bot) return;
@@ -47,8 +47,19 @@ client.on('message', message =>
     if (command !== undefined) command.execute(message, args);
 });
 
-// TODO disconnect when listeningTo user changes voice channels or disconnects.
+// Disconnects if user has changed channels or disconnects from the voice channel
+client.on('voiceStateUpdate', (oldState, newState) =>
+{
+    if (oldState.channelID !== newState.channelID &&
+        client.voiceConnections.find(info => info.listeningTo.id === newState.id))
+    {
+        client.textCommands.get('disconnect').execute(newState);
+    }
+});
 
-console.log('Starting Bot')
+// client.on('debug', console.log);
+
+console.log('Powering Up Voice Recognition Bot...');
+
 // Start the bot
 client.login(env.parsed.DISCORD_TOKEN);

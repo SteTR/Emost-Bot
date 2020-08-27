@@ -1,5 +1,6 @@
 const {createCommand, fixVoiceReceive, createVoiceConnectionData} = require('../../util.js');
 const {createConverter} = require('../../converter');
+const {hotword} = require('../../../config/config.json');
 
 const {VoiceRecognitionService} = require('../../VoiceRecognitionService');
 
@@ -27,7 +28,7 @@ module.exports = createCommand("connect",
 
         const voiceChannelPermissions = member.voice.channel.permissionsFor(message.client.user);
 
-        // Check if bot has permissions to speak and connection
+        // Check if bot has permissions to speak and connection in the user's voice channel
         if (!voiceChannelPermissions.has("SPEAK") || !voiceChannelPermissions.has("CONNECT"))
         {
             return message.channel.send(`Can not connect to<@${message.author.id}>'s voice channel.
@@ -45,10 +46,11 @@ module.exports = createCommand("connect",
 
         // Make voice streams for voice commands
         const voiceRecorderStream = createConverter(voiceReceiver)
-        const vr = new VoiceRecognitionService(connection, voiceRecorderStream);
+        const vr = new VoiceRecognitionService(hotword, connection, voiceRecorderStream);
 
-        // Store the connection to the server, the dispatcher to the server, and voice streams of current user.
-        message.client.voiceConnections.set(message.guild.id, createVoiceConnectionData(connection, vr, member.user, message.channel));
+        // Store the connection to the server, the voice recognition to the server, the user to listen to, and the text channel
+        message.client.voiceConnections.set(message.guild.id,
+            createVoiceConnectionData(connection, vr, member.user, message.channel));
 
-        console.log(`created audio stream for ${member.user.username}`);
+        console.log(`Guild ${message.guild.id}: created audio stream for ${member.user.username}`);
     });

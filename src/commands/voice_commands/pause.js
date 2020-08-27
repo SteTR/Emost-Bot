@@ -5,8 +5,8 @@ module.exports = createCommand(
     'pause the audio playing',
     async (client, guild, args) =>
     {
-        console.log('pausing')
         const serverInfo = client.voiceConnections.get(guild.id);
+        console.log(`Guild ${guild.id}: Pausing ${serverInfo.playing.url}`);
         if (serverInfo.dispatcher === undefined)
         {
             console.log('no dispatcher on this server');
