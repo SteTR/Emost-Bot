@@ -14,11 +14,12 @@ Emost-Bot is a music bot for discord using only voice commands. It will listen t
 * resume - resume the current song
 
 # Known Issues
-* None that I'm aware of but have mainly tested with one server, not multiple servers at once
+* Occasionally, porcupine will fail to initialize due to sensitivity range issues (unsure why)
+* No significant issues when mainly using in one server, possibly with multiple servers at once there will be issues
 
 # Planned Implementations
-* Add a signal to indicate the hotword has been recognized (e.g. ping noise when hotword is heard).
-* Allow the ability to listen to multiple users as opposed to one.
+* Add a signal to indicate the hotword has been recognized (e.g. ping noise when hotword is heard)
+* Allow the ability to listen to multiple users as opposed to one
 * More commands
 * Faster and offline speech to text 
 
