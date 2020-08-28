@@ -2,5 +2,6 @@
   "prefix": "!",
   "initial_audio_src": "https://www.youtube.com/watch?v=oFwFw2YvUKY",
   "hotword": "bumblebee",
-  "queueSize": 3
+  "queueSize": 3,
+  "WARNING_MESSAGE": "```The bot will record audio of the person typing !connect for hotword and speech detection purposes. The bot itself does not collect any data but uses Picovoice's Porcupine wake word engine and Google's Speech to Text API w/o Data Logging. \n\nIf you are not comfortable with what the bot is doing, please use !disconnect. \n\nThis only applies to Emost-Bot, any other bot with similar features may be collecting data.\n\nIf you would like to view the source code, here is the repository link: https://github.com/stetr/emost-bot```"
 }

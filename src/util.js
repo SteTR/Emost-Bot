@@ -15,10 +15,10 @@ function fixVoiceReceive(connection)
     const dispatcher = connection.play(ytdl(initial_audio_src,
         {filter: "audioonly", range: {start: 0, end: 2500}}));
     dispatcher.on("error", (err) => console.log(err));
-    dispatcher.on("start", () => console.log("Starting initial audio for payload request"));
+    dispatcher.on("start", () => console.log(`Guild ${connection.channel.guild.id}: Starting initial audio for payload request`));
     dispatcher.on("finish", () =>
     {
-        console.log("Finished the initial audio");
+        console.log(`Guild ${connection.channel.guild.id}: Finished the initial audio`);
         dispatcher.destroy();
     });
     return dispatcher;

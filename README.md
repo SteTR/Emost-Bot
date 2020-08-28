@@ -12,8 +12,7 @@ Emost-Bot is a music bot for discord using only voice commands. It will listen t
 * resume
 
 # Known Issues
-* When queueing a song, it would queue play the most recently added song. 
-** Cause: Using a stack instead of a queue.
+* None that I'm aware of but have mainly tested with one server, not multiple
 
 # Planned Implementations
 * Add a signal to indicate the hotword has been recognized (e.g. ping noise when hotword is heard).

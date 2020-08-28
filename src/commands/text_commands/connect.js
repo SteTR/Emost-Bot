@@ -1,6 +1,6 @@
 const {createCommand, fixVoiceReceive, createVoiceConnectionData} = require('../../util.js');
 const {createConverter} = require('../../converter');
-const {hotword} = require('../../../config/config.json');
+const {hotword, WARNING_MESSAGE} = require('../../../config/config.json');
 
 const {VoiceRecognitionService} = require('../../VoiceRecognitionService');
 
@@ -37,6 +37,8 @@ module.exports = createCommand("connect",
 
         const connection = await member.voice.channel.join()
             .then(message.channel.send(`Connected to ${member.voice.channel}.`));
+
+        message.channel.send(WARNING_MESSAGE);
 
         // play static noise to get voice receive functioning. Some undocumented discord requirement to receive audio
         fixVoiceReceive(connection);

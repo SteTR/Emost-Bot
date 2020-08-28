@@ -48,7 +48,7 @@ function realPlay(serverInfo, guild, songInfo)
             serverInfo.dispatcher = undefined;
             return;
         }
-        realPlay(serverInfo, guild, serverInfo.queue.pop());
+        realPlay(serverInfo, guild, serverInfo.queue.shift());
     });
     serverInfo.dispatcher.on("end", () => console.log(`Guild ${guild.id}: Song dispatcher ended`));
 }

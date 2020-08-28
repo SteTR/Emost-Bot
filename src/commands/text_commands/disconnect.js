@@ -15,5 +15,5 @@ module.exports = createCommand('disconnect',
         // Remove from storage
         message.client.voiceConnections.delete(message.guild.id);
 
-        console.log(`deleted entry: ${message.guild.id} from voice connections list.`)
+        console.log(`Deleted entry: Guild ${message.guild.id} from voice connections list.`)
     });
