@@ -36,4 +36,5 @@ If you are not comfortable with what the bot is doing, please use !disconnect.
 This only applies to Emost-Bot, any other bot with similar features may be collecting data that I have no control of.
 
 If you would like to view the source code, here is the repository link: https://github.com/stetr/emost-bot
-*Copy pasted from config.json
+
+*Copy pasted from config.json*
