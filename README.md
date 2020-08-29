@@ -1,8 +1,6 @@
 # Emost-Bot
 Emost-Bot is a music bot for discord using only voice commands. It will listen to only one person who types the {prefix}connect command in a text channel. The bot works in a similar manner to the voice assistant on modern phones.
 
-**Have only tested on Linux, no idea if it will work on Windows or Mac due to some dependencies not working on those platforms.**
-
 **There needs to be a very small delay (~0.5s) in order for the bot to start listening for the command. So say 'bumblebee...pause' rather than 'bumblebee pause'.**
 
 # Text Commands(default prefix: !)
@@ -44,6 +42,8 @@ Requirements:
 4. Make the environment variable for Google's Speech to Text API key by typing ```export GOOGLE_APPLICATION_CREDENTIALS="{PATH TO GOOGLE KEY WITHOUT CURLY BRACES}```
 
 5. go to the src directory and run ```node bot.js``` and your bot should be running.
+
+**Have only tested on Linux, no idea if it will work on Windows or Mac due to some dependencies not working on those platforms.**
 
 # Concerns with recording
 The bot will record audio of the person typing !connect for hotword and speech detection purposes. The bot itself does not collect any data but uses Picovoice's Porcupine wake word engine and Google's Speech to Text API w/o Data Logging. 
