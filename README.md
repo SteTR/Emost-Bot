@@ -37,11 +37,16 @@ Requirements:
 
 2. Run ```npm install``` in the directory with your preferred CLI to install dependencies
 
+
 3. Create a .env file in the project's directory and put DISCORD_TOKEN={YOUR DISCORD BOT TOKEN HERE WITHOUT CURLY BRACES}
 
-4. Make the environment variable for Google's Speech to Text API key by typing ```export GOOGLE_APPLICATION_CREDENTIALS="{PATH TO GOOGLE KEY WITHOUT CURLY BRACES}```
+*You can obtain a token in ```discord.com/developers```* 
 
-5. go to the src directory and run ```node bot.js``` and your bot should be running.
+4. Place your Google Speech API Key json file in the config folder and rename it to ```google_speech.json```
+
+*You can obtain the api key on ```https://console.cloud.google.com/apis/```*
+
+5. While in the project directory, run ```npm run start``` and the bot should be online
 
 **Have only tested on Linux, no idea if it will work on Windows or Mac due to some dependencies not working on those platforms.**
 

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node bot.js"
+    "start": "cd src && export GOOGLE_APPLICATION_CREDENTIALS=\"../config/google_speech.json\" && node bot.js"
   },
   "repository": {
     "type": "git",
