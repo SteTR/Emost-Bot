@@ -60,3 +60,6 @@ This only applies to Emost-Bot, any other bot with similar features may be colle
 If you would like to view the source code, here is the repository link: https://github.com/stetr/emost-bot
 
 *Copy pasted from config.json*
+# Contact Me
+Need to contact me for something?
+Add me on Discord @ Steven#4591
