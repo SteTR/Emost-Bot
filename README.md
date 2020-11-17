@@ -1,3 +1,6 @@
+# Update November 16 2020
+The bot is not currently available but the code should be functioning (I have not tested it). Development is currently on hiatus.
+
 # Emost-Bot
 Emost-Bot is a music bot for discord using only voice commands. It will listen to only one person who types the {prefix}connect command in a text channel. The bot works in a similar manner to the voice assistant on modern phones.
 
@@ -15,7 +18,7 @@ Emost-Bot is a music bot for discord using only voice commands. It will listen t
 
 # Known Issues
 * Occasionally, porcupine will fail to initialize due to sensitivity range issues (unsure why)
-* No significant issues when mainly using in one server, possibly with multiple servers at once there will be issues
+* Sometimes YT-DL will fail, known issue.
 
 # Planned Implementations(TBD)
 * Add a signal to indicate the hotword has been recognized (e.g. ping noise when hotword is heard)
