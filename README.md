@@ -1,6 +1,9 @@
 # Update November 16 2020
 The bot is not currently available but the code should be functioning (I have not tested it). Development is currently on hiatus.
 
+# Video Demonstration
+https://youtu.be/cdkUnAxJbh0
+
 # Emost-Bot
 Emost-Bot is a music bot for discord using only voice commands. It will listen to only one person who types the {prefix}connect command in a text channel. The bot works in a similar manner to the voice assistant on modern phones.
 
