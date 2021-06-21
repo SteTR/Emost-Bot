@@ -37,6 +37,7 @@ Requirements:
 * Google's Speech to Text API key
 * Discord Bot Token
 * ffmpeg
+* Mac or Linux (don't know if Windows works as I don't have a Windows device)
 
 
 1. To run the bot: clone the repository
